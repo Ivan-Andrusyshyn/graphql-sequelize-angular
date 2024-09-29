@@ -1,0 +1,38 @@
+<nav class="nav-links">
+  <ul class="nav-list">
+    <li
+      routerLink="home"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Home
+    </li>
+
+    @if(!isAuth()){
+    <div>
+      <li
+        routerLink="sign-in"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Sign-in
+      </li>
+      <li
+        routerLink="sign-up"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Sign-up
+      </li>
+    </div>
+    }@else {
+    <li
+      routerLink="tasks-profile"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Tasks profile
+    </li>
+    }
+  </ul>
+</nav>

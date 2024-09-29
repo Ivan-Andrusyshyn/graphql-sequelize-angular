@@ -1,0 +1,45 @@
+<h1>Task-Pro</h1>
+<p>From personal task management to team collaboration</p>
+<hr />
+<br />
+<section class="gallery">
+  <div class="gallery-bg-1"></div>
+  <div class="gallery-bg-2"></div>
+  <div class="gallery-bg-3"></div>
+  @if(!isAuth()){
+  <span routerLink="/sign-in">Try now</span>
+  }@else{
+  <span routerLink="/tasks-profile">Your tasks</span>
+
+  }
+</section>
+
+<section class="about">
+  <h2>About Me</h2>
+  <p>
+    👋 Welcome to my website! I am dedicated to providing the best services for
+    my clients.
+  </p>
+  <p>
+    This is a full-stack application that I built to help you efficiently plan
+    and manage your daily tasks. Utilizing modern technologies such as Sequelize
+    for database management and GraphQL for seamless API interaction, the app
+    provides a powerful solution for task organization. 🗓️📋 My primary goal
+    with this platform is to make task planning simple, intuitive, and highly
+    productive, ensuring you stay on track with all your responsibilities. 🚀
+  </p>
+  <p>
+    My mission is to deliver top-notch quality with a customer-first approach,
+    ensuring that productivity and ease of use go hand in hand. 🎯
+  </p>
+  <p>
+    <strong>Technology Stack:</strong> 🛠️ Node.js, Express, Sequelize
+    (PostgreSQL), GraphQL, Angular for the frontend, and Material UI for a
+    modern and responsive user interface.
+  </p>
+  <p>
+    From personal task management to team collaboration, this application is
+    designed to adapt to your needs. Let’s make productivity fun and effortless!
+    🎉💼
+  </p>
+</section>

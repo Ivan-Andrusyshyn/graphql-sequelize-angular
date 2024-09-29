@@ -1,0 +1,20 @@
+<ul class="task-list">
+  <li *ngFor="let task of tasks; let i = index" class="task-item">
+    <h3>{{ task.title }}</h3>
+    <div
+      class="btn-wrapper"
+      appOnScroll
+      [class.expanded]="isCurrentTaskExpended(task.id)"
+    >
+      <button class="update-btn" (click)="updateTask(task)">Update</button>
+      <button class="delete-btn" (click)="deleteTask(task.id)">Delete</button>
+      <button
+        [class.p-absolute]="!isCurrentTaskExpended(task.id)"
+        class="showmore-btn"
+        (click)="showMoreDetails(task)"
+      >
+        {{ isCurrentTaskExpended(task.id) ? "Less" : "More" }}
+      </button>
+    </div>
+  </li>
+</ul>

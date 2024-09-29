@@ -1,0 +1,33 @@
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.task-form {
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+}
+.btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+@media (max-width: 920px) {
+  .task-form {
+    max-width: 920px;
+    min-width: 360px;
+  }
+  .form-control {
+    padding: 8px;
+  }
+  .btn {
+    padding: 8px;
+  }
+}

@@ -1,0 +1,23 @@
+<div class="title-container">
+  <div class="task-bg-1"></div>
+  <h2>Task List</h2>
+  <p>
+    This section contains all your tasks. Please add a new task to get started.
+    Effective planning can enhance your productivity and lead to greater
+    happiness.
+  </p>
+</div>
+<div class="task-container">
+  <div>
+    <app-tasks-form
+      [formGroup]="taskForm"
+      (submitForm)="addTask()"
+    ></app-tasks-form>
+  </div>
+
+  <app-tasks-list
+    [tasks]="tasks"
+    (onDeleteTask)="deleteTask($event)"
+    (onUpdateTask)="updateTask($event)"
+  ></app-tasks-list>
+</div>
