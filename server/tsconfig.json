@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es2016", // Определение целевой версии ECMAScript
+    "module": "commonjs", // Использование модуля CommonJS
+    "outDir": "ts-built", // Директория для скомпилированных файлов
+    "rootDir": "./src", // Корневая директория исходных файлов
+    "esModuleInterop": true, // Поддержка импорта CommonJS модулей
+    "moduleResolution": "node", // Разрешение модулей, аналогичное Node.js
+    "forceConsistentCasingInFileNames": true, // Проверка регистра в путях файлов
+    "skipLibCheck": true, // Пропуск проверки типов в d.ts файлах
+    "sourceMap": true,
+    "strict": true, // Включает все строгие правила
+    "noImplicitAny": true, // Запрещает неявное использование типа `any`
+    "strictNullChecks": true, // Проверка на null и undefined
+    "strictFunctionTypes": true, // Строгие типы для функций
+    "strictPropertyInitialization": true, // Инициализация всех свойств классов
+
+    "noUnusedLocals": true, // Уведомление о неиспользуемых переменных
+    "noUnusedParameters": true, // Уведомление о неиспользуемых параметрах
+    "noImplicitReturns": true, // Уведомление о функциях без возвращаемого значения
+    "noFallthroughCasesInSwitch": true, // Предотвращение fallthrough в switch
+
+    "resolveJsonModule": true, // Поддержка импорта JSON файлов
+    "isolatedModules": true, // Поддержка изолированных модулей для совместимости с Babel
+    "allowSyntheticDefaultImports": true, // Поддержка импорта по умолчанию для CommonJS модулей
+    "useDefineForClassFields": true // Использование `define` для полей класса
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
