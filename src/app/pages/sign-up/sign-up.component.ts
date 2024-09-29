@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 import { AuthService } from '../../shared/services/auth.service';
 import { User } from '../../shared/models/user.model';
@@ -11,6 +11,7 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
   imports: [AuthFormComponent],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignUpComponent {
   isLogin: boolean = false;
@@ -23,6 +24,7 @@ export class SignUpComponent {
     this.authService.registration(data).subscribe(
       (response) => {
         this.lsService.setItem('user', response.data.registration);
+        this.authService.onIsAuthUser();
         this.router.navigate(['tasks-profile']);
       },
       (error) => {

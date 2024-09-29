@@ -6,8 +6,8 @@
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     ></div>
-    <app-nav-list [isAuth]="isAuth()"></app-nav-list>
-    @if(isAuth()){
+    <app-nav-list [isAuth]="(isAuth$ | async) ?? false"></app-nav-list>
+    @if(isAuth$ | async){
     <button (click)="onLogout()" class="logout-btn">🚪 Logout</button>
     }
   </div>

@@ -88,12 +88,11 @@ export const updateTask = async ({
   }
 };
 export const deleteTask = async ({
-  id,
-  userId,
+  input,
 }: {
-  id: string;
-  userId: string;
+  input: TaskTypes;
 }): Promise<string> => {
+  const { id, userId } = input;
   try {
     const existingTask = await Task.findOne({
       where: { id, userId },
@@ -104,12 +103,16 @@ export const deleteTask = async ({
         'Task not found or you do not have permission to delete this task.'
       );
     }
-
     await existingTask.destroy();
-
-    console.log(`Task deleted by user ${userId}:`, existingTask);
-
-    return `Task with id ${id} has been successfully deleted.`;
+    const tasks = await Task.findAll({
+      where: { userId },
+      attributes: ['id', 'title', 'description'],
+    });
+    return tasks.map((task: TaskTypes) => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+    }));
   } catch (error: any) {
     console.error('Error deleting task:', error.message || error);
     throw new Error('Could not delete task. Please try again later.');

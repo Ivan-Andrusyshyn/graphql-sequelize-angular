@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, input, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -8,7 +8,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   imports: [RouterLink, RouterLinkActive, NgIf],
   templateUrl: './nav-list.component.html',
   styleUrl: './nav-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavListComponent {
-  isAuth = input<boolean>(false);
+  @Input() isAuth!: boolean;
 }

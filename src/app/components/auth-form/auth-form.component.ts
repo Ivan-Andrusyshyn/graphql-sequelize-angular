@@ -1,5 +1,12 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { User } from '../../shared/models/user.model';
@@ -10,6 +17,7 @@ import { User } from '../../shared/models/user.model';
   imports: [ReactiveFormsModule, NgIf],
   templateUrl: './auth-form.component.html',
   styleUrl: './auth-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthFormComponent {
   @Input() isLogin: boolean = true;

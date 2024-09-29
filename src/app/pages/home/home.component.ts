@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 
@@ -8,6 +14,7 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
   imports: [RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
   lsService = inject(LocalStorageService);

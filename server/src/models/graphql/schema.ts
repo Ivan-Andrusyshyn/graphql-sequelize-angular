@@ -1,4 +1,4 @@
-import { buildSchema } from "graphql";
+import { buildSchema } from 'graphql';
 
 export const userSchema = buildSchema(`
   type User {
@@ -30,7 +30,7 @@ export const userSchema = buildSchema(`
   }
 
   input TaskInput {
-    title: String!
+    title: String
     description: String
     userId:String!
     id:String

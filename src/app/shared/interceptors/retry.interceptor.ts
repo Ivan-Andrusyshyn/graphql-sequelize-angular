@@ -14,7 +14,7 @@ export const retryInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         console.log('Unauthorized access - redirecting to login.');
-        router.navigate(['/login']);
+        router.navigate(['/sign-in']);
         authService.logout();
       }
       console.error('Retry Interceptor Functional Error:', error);

@@ -16,8 +16,8 @@
   </div>
 
   <app-tasks-list
-    [tasks]="tasks"
-    (onDeleteTask)="deleteTask($event)"
+    [tasks]="(tasks$ | async) ?? []"
+    (onDeleteTask)="onDeleteTask($event)"
     (onUpdateTask)="updateTask($event)"
   ></app-tasks-list>
 </div>

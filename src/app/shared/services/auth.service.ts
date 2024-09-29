@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthArgs, User } from '../models/user.model';
 import { GET_ALL_USERS, LOGIN_USER, REGISTER_USER } from '../apollo/user';
 
@@ -8,8 +8,14 @@ import { GET_ALL_USERS, LOGIN_USER, REGISTER_USER } from '../apollo/user';
   providedIn: 'root',
 })
 export class AuthService {
+  private isAuth = new BehaviorSubject(false);
+  isAuth$ = this.isAuth.asObservable();
+
   constructor(private apollo: Apollo) {}
 
+  onIsAuthUser() {
+    this.isAuth.next(true);
+  }
   registration(input: AuthArgs): Observable<any> {
     return this.apollo.mutate<{ registration: User }>({
       mutation: REGISTER_USER,
@@ -35,5 +41,6 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('user');
+    this.isAuth.next(false);
   }
 }

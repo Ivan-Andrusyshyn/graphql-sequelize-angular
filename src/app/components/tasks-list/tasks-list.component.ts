@@ -1,4 +1,13 @@
-import { Component, Input, input, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  input,
+  OnChanges,
+  Output,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
 import { OnScrollDirective } from '../../shared/directives/on-scroll.directive';
 import { NgFor } from '@angular/common';
 import { Task } from '../../shared/models/task.model';
@@ -10,6 +19,7 @@ import { EventEmitter } from '@angular/core';
   imports: [OnScrollDirective, NgFor],
   templateUrl: './tasks-list.component.html',
   styleUrl: './tasks-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksListComponent {
   @Input() tasks: Task[] = [];

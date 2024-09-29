@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavListComponent } from '../../../components/nav-list/nav-list.component';
 
@@ -8,7 +13,6 @@ import { NavListComponent } from '../../../components/nav-list/nav-list.componen
   imports: [RouterLink, NavListComponent, RouterLinkActive],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FooterComponent {
-  isAuth: boolean = false;
-}
+export class FooterComponent {}

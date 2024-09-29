@@ -1,5 +1,10 @@
 import { NgIf } from '@angular/common';
-import { Component, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 
@@ -9,6 +14,7 @@ import { EventEmitter } from '@angular/core';
   imports: [NgIf, ReactiveFormsModule],
   templateUrl: './tasks-form.component.html',
   styleUrl: './tasks-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksFormComponent {
   @Input() formGroup!: FormGroup;
