@@ -38,29 +38,32 @@
     display: flex;
     position: relative;
     overflow: hidden;
-    width: 42px;
+    width: 45px;
     padding: 0.5rem;
     gap: 0.5rem;
     transition: width 0.3s linear;
   }
   .expanded {
     overflow-x: auto;
-    width: 150px;
+    width: 170px;
     white-space: nowrap;
     scrollbar-width: thin;
     scrollbar-color: #888 #e0e0e0;
   }
 
   .p-absolute {
+    background-color: #6c757d;
     position: absolute;
   }
+
   .btn-wrapper > button {
     padding: 5px 10px;
     height: 25px;
     color: white;
-    border: none;
-    border-radius: 3px;
+    border: 1px solid transparent;
+    border-radius: 4px;
     cursor: pointer;
+    transition: color 0.3s linear;
   }
   .delete-btn {
     background-color: red;
@@ -68,7 +71,16 @@
   .update-btn {
     background-color: rgb(145, 255, 0);
   }
-  .showmore-btn {
-    background-color: #6c757d;
+
+  .details-btn {
+    background-color: #bdbdbd;
+    border: 1px solid rgb(185, 185, 11);
+    font-style: italic;
+    color: #1111;
   }
+}
+.btn-translate {
+  background-color: #c5b3b3;
+  font-style: italic;
+  color: #1111;
 }

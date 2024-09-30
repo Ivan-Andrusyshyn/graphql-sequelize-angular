@@ -14,10 +14,18 @@
       (submitForm)="addTask()"
     ></app-tasks-form>
   </div>
-
-  <app-tasks-list
-    [tasks]="(tasks$ | async) ?? []"
-    (onDeleteTask)="onDeleteTask($event)"
-    (onUpdateTask)="updateTask($event)"
-  ></app-tasks-list>
+  <div class="tasks-wrapper">
+    <app-tasks-list
+      [tasks]="(tasks$ | async) ?? []"
+      [isOpen]="(isOpen$ | async) ?? false"
+      (onDeleteTask)="onDeleteTask($event)"
+      (onUpdateTask)="updateTask($event)"
+      (detailsTasks)="detailsTasks($event)"
+    ></app-tasks-list>
+    <app-task-details
+      (closeDetails)="closeDetails()"
+      [currentTask]="currentTask"
+      [isOpen]="(isOpen$ | async) ?? false"
+    ></app-task-details>
+  </div>
 </div>

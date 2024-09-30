@@ -22,7 +22,7 @@ import { TasksService } from '../../shared/services/tasks-service.service';
 import { TasksFormComponent } from '../../components/tasks-form/tasks-form.component';
 import { OnScrollDirective } from '../../shared/directives/on-scroll.directive';
 import { TasksListComponent } from '../../components/tasks-list/tasks-list.component';
-import { Observable } from '@apollo/client';
+import { TaskDetailsComponent } from '../../components/task-details/task-details.component';
 
 @Component({
   selector: 'app-tasks-profile',
@@ -36,6 +36,7 @@ import { Observable } from '@apollo/client';
     NgIf,
     AsyncPipe,
     TasksListComponent,
+    TaskDetailsComponent,
   ],
   templateUrl: './tasks-profile.component.html',
   styleUrl: './tasks-profile.component.scss',
@@ -43,11 +44,14 @@ import { Observable } from '@apollo/client';
 })
 export class TasksProfileComponent {
   tasks: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  isOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   tasks$ = this.tasks.asObservable();
+  isOpen$ = this.isOpen.asObservable();
 
   taskForm!: FormGroup;
   isUpdate: boolean = false;
   currentTaskId: string = '';
+  currentTask: Task | null = null;
 
   private cd = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
@@ -122,6 +126,14 @@ export class TasksProfileComponent {
       console.log('Form is invalid');
     }
   }
+  closeDetails() {
+    this.isOpen.next(false);
+  }
+  detailsTasks(task: Task) {
+    this.isOpen.next(true);
+    this.currentTask = task;
+  }
+
   updateTask(task: Task) {
     this.taskForm.setValue({
       title: task.title,

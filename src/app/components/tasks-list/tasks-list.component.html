@@ -1,4 +1,4 @@
-<ul class="task-list">
+<ul class="task-list" [@openClose]="isOpen ? 'open' : 'closed'">
   <li *ngFor="let task of tasks; let i = index" class="task-item">
     <h3>{{ task.title }}</h3>
     <div
@@ -6,15 +6,17 @@
       appOnScroll
       [class.expanded]="isCurrentTaskExpended(task.id)"
     >
-      <button class="update-btn" (click)="updateTask(task)">Update</button>
-      <button class="delete-btn" (click)="deleteTask(task.id)">Delete</button>
       <button
         [class.p-absolute]="!isCurrentTaskExpended(task.id)"
+        [class.btn-translate]="isCurrentTaskExpended(task.id)"
         class="showmore-btn"
         (click)="showMoreDetails(task)"
       >
-        {{ isCurrentTaskExpended(task.id) ? "Less" : "More" }}
+        {{ isCurrentTaskExpended(task.id) ? "Less >" : "More" }}
       </button>
+      <button class="details-btn" (click)="onDetailsTask(task)">Details</button>
+      <button class="update-btn" (click)="updateTask(task)">Update</button>
+      <button class="delete-btn" (click)="deleteTask(task.id)">Delete</button>
     </div>
   </li>
 </ul>

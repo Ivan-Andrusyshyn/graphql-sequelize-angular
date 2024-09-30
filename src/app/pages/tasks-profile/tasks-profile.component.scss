@@ -43,7 +43,11 @@
     max-width: 600px;
   }
 }
-
+.tasks-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
 @media (max-width: 920px) {
   .task-container {
     padding: 15px;

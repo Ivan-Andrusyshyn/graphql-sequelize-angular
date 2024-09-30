@@ -1,0 +1,19 @@
+<div class="details-container" [@openClose]="isOpen ? 'open' : 'closed'">
+  <div *ngIf="currentTask">
+    <div class="details-header">
+      <h2>Detail Information</h2>
+      <p>Here is some task`s description.</p>
+      <span (click)="onClose()">❌</span>
+    </div>
+    <div class="details-content">
+      <div class="details-item">
+        <span class="label">Title:</span>
+        <span class="value">{{ currentTask.title }}</span>
+      </div>
+      <div class="details-item">
+        <span class="label">Description:</span>
+        <span class="value">{{ currentTask.description }}</span>
+      </div>
+    </div>
+  </div>
+</div>

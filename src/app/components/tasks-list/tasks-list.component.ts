@@ -12,6 +12,7 @@ import { OnScrollDirective } from '../../shared/directives/on-scroll.directive';
 import { NgFor } from '@angular/common';
 import { Task } from '../../shared/models/task.model';
 import { EventEmitter } from '@angular/core';
+import { translateAnimation } from './animations';
 
 @Component({
   selector: 'app-tasks-list',
@@ -19,12 +20,15 @@ import { EventEmitter } from '@angular/core';
   imports: [OnScrollDirective, NgFor],
   templateUrl: './tasks-list.component.html',
   styleUrl: './tasks-list.component.scss',
+  animations: [translateAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksListComponent {
   @Input() tasks: Task[] = [];
+  @Input() isOpen: boolean = false;
   @Output() onDeleteTask = new EventEmitter();
   @Output() onUpdateTask = new EventEmitter();
+  @Output() detailsTasks = new EventEmitter();
 
   expandedTaskId = signal<string | null>(null);
   showOptions = signal<boolean>(false);
@@ -45,7 +49,9 @@ export class TasksListComponent {
       }
     }
   }
-
+  onDetailsTask(task: Task) {
+    this.detailsTasks.emit(task);
+  }
   updateTask(task: Task) {
     if (task) this.onUpdateTask.emit(task);
   }

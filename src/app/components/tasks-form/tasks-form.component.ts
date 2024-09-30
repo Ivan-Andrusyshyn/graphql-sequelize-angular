@@ -8,13 +8,7 @@ import {
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-} from '@angular/animations';
+import { openCloseAnimation } from './animations';
 
 @Component({
   selector: 'app-tasks-form',
@@ -23,26 +17,7 @@ import {
   templateUrl: './tasks-form.component.html',
   styleUrl: './tasks-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('openClose', [
-      state(
-        'open',
-        style({
-          height: '200px',
-          opacity: 1,
-        })
-      ),
-      state(
-        'closed',
-        style({
-          height: '0',
-          opacity: 0,
-        })
-      ),
-      transition('open => closed', [animate('1s')]),
-      transition('closed => open', [animate('0.5s')]),
-    ]),
-  ],
+  animations: [openCloseAnimation],
 })
 export class TasksFormComponent implements OnInit {
   @Input() formGroup!: FormGroup;
