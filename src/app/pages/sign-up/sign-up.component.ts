@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 import { AuthService } from '../../shared/services/auth.service';
-import { User } from '../../shared/models/user.model';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -21,15 +21,18 @@ export class SignUpComponent {
   private router = inject(Router);
 
   handleRegistration(data: any): void {
-    this.authService.registration(data).subscribe(
-      (response) => {
-        this.lsService.setItem('user', response.data.registration);
-        this.authService.onIsAuthUser();
-        this.router.navigate(['tasks-profile']);
-      },
-      (error) => {
-        throw error;
-      }
-    );
+    this.authService
+      .registration(data)
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          this.lsService.setItem('user', response.data.registration);
+          this.authService.onIsAuthUser();
+          this.router.navigate(['tasks-profile']);
+        },
+        (error) => {
+          throw error;
+        }
+      );
   }
 }

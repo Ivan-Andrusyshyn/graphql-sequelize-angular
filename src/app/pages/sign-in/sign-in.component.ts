@@ -3,6 +3,7 @@ import { AuthFormComponent } from '../../components/auth-form/auth-form.componen
 import { AuthService } from '../../shared/services/auth.service';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,16 +20,18 @@ export class SignInComponent {
   private router = inject(Router);
 
   handleLogin(data: any): void {
-    console.log('Registration Data:', data);
-    this.authService.login(data).subscribe(
-      (response) => {
-        this.lsService.setItem('user', response.data.registration);
-        this.authService.onIsAuthUser();
-        this.router.navigate(['tasks-profile']);
-      },
-      (error) => {
-        throw error;
-      }
-    );
+    this.authService
+      .login(data)
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          this.lsService.setItem('user', response.data.login);
+          this.authService.onIsAuthUser();
+          this.router.navigate(['tasks-profile']);
+        },
+        (error) => {
+          throw error;
+        }
+      );
   }
 }

@@ -1,4 +1,21 @@
-<form [formGroup]="formGroup" (ngSubmit)="addTask()" class="task-form">
+<nav>
+  <button
+    [class.show-btn]="isOpen"
+    [class.hidden-btn]="!isOpen"
+    class="btn nav-btn"
+    type="button"
+    (click)="toggle()"
+  >
+    {{ isOpen ? "Hide form" : "..." }}
+  </button>
+</nav>
+
+<form
+  [@openClose]="isOpen ? 'open' : 'closed'"
+  [formGroup]="formGroup"
+  (ngSubmit)="addTask()"
+  class="task-form"
+>
   <div class="form-group">
     <label for="title">Task Title</label>
     <input

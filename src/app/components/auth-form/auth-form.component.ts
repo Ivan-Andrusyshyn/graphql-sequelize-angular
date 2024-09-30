@@ -29,9 +29,9 @@ export class AuthFormComponent {
 
   ngOnInit(): void {
     this.authForm = this.fb.group({
-      username: ['Tests', Validators.required],
-      password: ['Tests1234', Validators.required],
-      email: ['tests@1234'],
+      username: ['Tests32a32b', Validators.required],
+      password: ['Tests123432qb', Validators.required],
+      email: ['tests@tester1'],
     });
 
     if (this.isLogin) {
