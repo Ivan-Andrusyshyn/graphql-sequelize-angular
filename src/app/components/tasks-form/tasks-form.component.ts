@@ -21,8 +21,8 @@ import { openCloseAnimation } from './animations';
 })
 export class TasksFormComponent implements OnInit {
   @Input() formGroup!: FormGroup;
+  @Input() isOpen: boolean = false;
   @Output() submitForm = new EventEmitter();
-  isOpen = false;
 
   ngOnInit(): void {}
 

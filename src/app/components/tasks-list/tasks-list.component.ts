@@ -26,6 +26,8 @@ import { translateAnimation } from './animations';
 export class TasksListComponent {
   @Input() tasks: Task[] = [];
   @Input() isOpen: boolean = false;
+  @Input() isOpenForm: boolean = false;
+
   @Output() onDeleteTask = new EventEmitter();
   @Output() onUpdateTask = new EventEmitter();
   @Output() detailsTasks = new EventEmitter();

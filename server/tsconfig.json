@@ -25,6 +25,6 @@
     "allowSyntheticDefaultImports": true, // Поддержка импорта по умолчанию для CommonJS модулей
     "useDefineForClassFields": true // Использование `define` для полей класса
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 dotenv.config();
 export interface AuthenticatedRequest extends Request {
@@ -13,16 +13,16 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.get("Authorization");
+  const authHeader = req.get('Authorization');
 
   if (!authHeader) {
     req.isAuth = false;
     return next();
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(' ')[1];
 
-  if (!token || token === "") {
+  if (!token || token === '') {
     req.isAuth = false;
     return next();
   }
@@ -31,15 +31,15 @@ export const authMiddleware = (
   try {
     const jwtKey = process.env.JWT_KEY;
     if (!jwtKey) {
-      throw new Error("JWT key is not defined");
+      throw new Error('JWT key is not defined');
     }
     decodedToken = jwt.verify(token, jwtKey) as jwt.JwtPayload;
   } catch (err: any) {
     console.log(err);
-    if (err.name === "TokenExpiredError") {
+    if (err.name === 'TokenExpiredError') {
       return res
         .status(401)
-        .json({ message: "Token expired, please log in again." });
+        .json({ message: 'Token expired, please log in again.' });
     }
     req.isAuth = false;
     return next();

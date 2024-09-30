@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
@@ -19,13 +20,13 @@ import { User } from '../../shared/models/user.model';
   styleUrl: './auth-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthFormComponent {
+export class AuthFormComponent implements OnInit {
   @Input() isLogin: boolean = true;
   @Output() submitForm = new EventEmitter<User>();
 
-  authForm!: FormGroup;
+  private fb = inject(FormBuilder);
 
-  constructor(private fb: FormBuilder) {}
+  authForm!: FormGroup;
 
   ngOnInit(): void {
     this.authForm = this.fb.group({

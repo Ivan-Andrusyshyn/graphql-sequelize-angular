@@ -1,4 +1,4 @@
-import { TaskTypes } from '../models/graphql/task.model';
+import { TaskTypes } from '../models/graphql/types/task.interface';
 import { Task } from '../models/task-sequelize';
 
 export const getAllTasks = async (

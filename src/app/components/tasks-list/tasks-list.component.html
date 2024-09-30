@@ -3,7 +3,7 @@
     <h3>{{ task.title }}</h3>
     <div
       class="btn-wrapper"
-      appOnScroll
+      [appOnScroll]="showOptions()"
       [class.expanded]="isCurrentTaskExpended(task.id)"
     >
       <button
@@ -15,7 +15,9 @@
         {{ isCurrentTaskExpended(task.id) ? "Less >" : "More" }}
       </button>
       <button class="details-btn" (click)="onDetailsTask(task)">Details</button>
-      <button class="update-btn" (click)="updateTask(task)">Update</button>
+      <button class="update-btn" (click)="updateTask(task)">
+        {{ isOpenForm ? "Close" : "Update" }}
+      </button>
       <button class="delete-btn" (click)="deleteTask(task.id)">Delete</button>
     </div>
   </li>

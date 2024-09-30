@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { AuthArgs } from '../models/graphql/user.model';
+import { AuthArgs } from '../models/graphql/types/user.interface';
 import { Users } from '../models/user-sequelize';
 
 const jwtKey = process.env.JWT_KEY;

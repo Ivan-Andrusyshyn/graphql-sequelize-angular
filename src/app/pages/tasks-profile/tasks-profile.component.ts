@@ -45,8 +45,10 @@ import { TaskDetailsComponent } from '../../components/task-details/task-details
 export class TasksProfileComponent {
   tasks: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
   isOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isOpenForm: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   tasks$ = this.tasks.asObservable();
   isOpen$ = this.isOpen.asObservable();
+  isOpenForm$ = this.isOpenForm.asObservable();
 
   taskForm!: FormGroup;
   isUpdate: boolean = false;
@@ -97,7 +99,7 @@ export class TasksProfileComponent {
               tasksArray[index] = newTask;
 
               this.tasks.next(tasksArray);
-
+              this.isOpenForm.next(true);
               this.taskForm.reset();
               this.cd.markForCheck();
             },
@@ -129,6 +131,7 @@ export class TasksProfileComponent {
   closeDetails() {
     this.isOpen.next(false);
   }
+
   detailsTasks(task: Task) {
     this.isOpen.next(true);
     this.currentTask = task;
@@ -139,9 +142,14 @@ export class TasksProfileComponent {
       title: task.title,
       description: task.description,
     });
+    if (this.isOpenForm.value) {
+      this.isOpenForm.next(false);
+      return;
+    }
     if (task.id) {
       this.currentTaskId = task.id;
       this.isUpdate = true;
+      this.isOpenForm.next(true);
     } else {
       console.log('Task id not exist');
     }
