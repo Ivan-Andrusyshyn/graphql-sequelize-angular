@@ -8,7 +8,7 @@
   </p>
 </div>
 <div class="task-container">
-  <div>
+  <div *ngIf="!currentTask">
     <app-tasks-form
       [isOpen]="(isOpenForm$ | async) ?? false"
       [formGroup]="taskForm"
