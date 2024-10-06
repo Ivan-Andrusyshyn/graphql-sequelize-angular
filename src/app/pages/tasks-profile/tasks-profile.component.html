@@ -15,7 +15,8 @@
   <div class="task-container">
     <div *ngIf="!isOpenDetails()">
       <app-tasks-form
-        [isOpen]="isOpenForm()"
+        [isOpenForm]="isOpenForm()"
+        (formToggleBtn)="formToggleBtn()"
         [formGroup]="taskForm"
         (submitForm)="handleTask()"
       ></app-tasks-form>
@@ -23,7 +24,8 @@
     <div class="tasks-wrapper">
       <app-tasks-list
         [tasks]="tasks()"
-        [isOpen]="isOpenDetails()"
+        [isUpdate]="isUpdate()"
+        [isOpenDetails]="isOpenDetails()"
         [isOpenForm]="isOpenForm()"
         (onDeleteTask)="onDeleteTask($event)"
         (onUpdateTask)="updateTask($event)"
@@ -31,8 +33,8 @@
       ></app-tasks-list>
       <app-task-details
         (closeDetails)="closeDetails()"
-        [currentTask]="currentTask"
-        [isOpen]="isOpenDetails()"
+        [currentTask]="currentTask()"
+        [isOpenDetails]="isOpenDetails()"
       ></app-task-details>
     </div>
   </div>

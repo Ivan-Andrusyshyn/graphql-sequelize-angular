@@ -24,6 +24,7 @@ import { TasksFormComponent } from '../../components/tasks-form/tasks-form.compo
 import { OnScrollDirective } from '../../shared/directives/on-scroll.directive';
 import { TasksListComponent } from '../../components/tasks-list/tasks-list.component';
 import { TaskDetailsComponent } from '../../components/task-details/task-details.component';
+import { catchError, finalize, of, take } from 'rxjs';
 
 @Component({
   selector: 'app-tasks-profile',
@@ -33,7 +34,6 @@ import { TaskDetailsComponent } from '../../components/task-details/task-details
     OnScrollDirective,
     NgClass,
     TasksFormComponent,
-    ReactiveFormsModule,
     NgIf,
     AsyncPipe,
     TasksListComponent,
@@ -44,21 +44,20 @@ import { TaskDetailsComponent } from '../../components/task-details/task-details
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksProfileComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private lsService = inject(LocalStorageService);
   private tasksService = inject(TasksService);
+  private fb = inject(FormBuilder);
 
   taskForm!: FormGroup;
-  currentTask: Task | null = null;
-  private currentTaskId: string = '';
-
   tasks: WritableSignal<Task[]> = signal<Task[]>([]);
 
+  private currentTaskId: string = '';
   user = signal<User | null>(null);
   isOpenForm = signal<boolean>(false);
   isOpenDetails = signal<boolean>(false);
   isUpdate = signal<boolean>(false);
   isLoading = signal<boolean>(false);
+  currentTask = signal<Task | null>(null);
 
   constructor() {}
 
@@ -67,43 +66,44 @@ export class TasksProfileComponent implements OnInit {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
-      status: ['OPEN', Validators.required],
+      status: ['OPEN', [Validators.required]],
     });
     const userData: User | null = this.lsService.getItem('user');
     if (userData) {
       this.user.set(userData);
     }
-    this.tasksService.getAllTasks().subscribe((tasks) => {
-      this.tasks.set(tasks);
-      this.isLoading.set(false);
-    });
+    this.tasksService
+      .getAllTasks()
+      .pipe(
+        catchError(() => of([])),
+        finalize(() => this.isLoading.set(false)),
+        take(1)
+      )
+      .subscribe((tasks) => {
+        this.tasks.set(tasks);
+      });
   }
 
   handleTask(): void {
     const user: User | null = this.lsService.getItem('user');
 
-    if (this.taskForm.valid && user) {
-      const newTask = { ...this.taskForm.value, userId: user.id };
-      const tasksArray = this.tasks().slice() ?? [];
-      if (this.isUpdate()) {
+    if (!user) return;
+    const newTask = { ...this.taskForm.value, userId: user.id };
+    if (this.isUpdate()) {
+      this.tasksService.updateTask(newTask).subscribe(() => {
+        const tasksArray = this.tasks().slice() ?? [];
         newTask.id = this.currentTaskId;
         const index = tasksArray.findIndex(
           (item) => item.id === this.currentTaskId
         );
         tasksArray[index] = newTask;
         this.isOpenForm.set(true);
-
-        this.tasksService.updateTask(newTask).subscribe(() => {
-          this.tasks.set(tasksArray);
-        });
-      } else {
-        this.tasksService.createTask(newTask).subscribe(() => {
-          this.tasks.update((prev) => [...prev, newTask]);
-          this.taskForm.reset();
-        });
-      }
+        this.tasks.set(tasksArray);
+      });
     } else {
-      console.log('Form is invalid');
+      this.tasksService.createTask(newTask).subscribe(() => {
+        this.tasks.update((prev) => [...prev, newTask]);
+      });
     }
   }
 
@@ -112,24 +112,33 @@ export class TasksProfileComponent implements OnInit {
   }
 
   openDetailsTasks(task: Task) {
-    this.isOpenDetails.set(true);
-    this.currentTask = task;
+    this.isOpenDetails.update((prev) => !prev);
+    if (this.isOpenDetails()) {
+      this.currentTask.set(task);
+    }
   }
 
   updateTask(task: Task) {
-    this.taskForm.setValue({
-      title: task.title,
-      description: task.description,
-      status: task.status,
-    });
-
-    if (task.id) {
+    if (task.id && !this.isOpenDetails()) {
+      this.taskForm.setValue({
+        title: task.title,
+        description: task.description,
+        status: task.status,
+      });
+      this.currentTask.set(task);
       this.currentTaskId = task.id;
       this.isOpenForm.update((prev) => !prev);
-      this.isUpdate.set(true);
+      this.isUpdate.update((prev) => !prev);
     } else {
       console.log('Task id not exist');
     }
+  }
+
+  formToggleBtn() {
+    this.isOpenForm.update((prev) => !prev);
+    this.taskForm.reset();
+    this.taskForm.patchValue({ status: 'OPEN' });
+    this.isUpdate.set(false);
   }
 
   onDeleteTask(id: string | undefined) {

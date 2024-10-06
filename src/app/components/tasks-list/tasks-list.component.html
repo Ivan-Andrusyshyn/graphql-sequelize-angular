@@ -1,4 +1,4 @@
-<ul class="task-list" [@openClose]="isOpen ? 'open' : 'closed'">
+<ul class="task-list" [@openClose]="isOpenDetails ? 'open' : 'closed'">
   <li *ngFor="let task of tasks; let i = index" class="task-item">
     <h3>{{ task.title }}</h3>
     @if (!showOptions()) {
@@ -23,9 +23,11 @@
       >
         {{ isCurrentTaskExpended(task.id) ? "Less >" : "More" }}
       </button>
-      <button class="details-btn" (click)="onDetailsTask(task)">Details</button>
+      <button class="details-btn" (click)="onDetailsTask(task)">
+        {{ isOpenDetails ? "Close" : "Details" }}
+      </button>
       <button class="update-btn" (click)="updateTask(task)">
-        {{ isOpenForm ? "Close" : "Update" }}
+        {{ isOpenForm && isUpdate ? "Close" : "Update" }}
       </button>
       <button class="delete-btn" (click)="deleteTask(task.id)">Delete</button>
     </div>

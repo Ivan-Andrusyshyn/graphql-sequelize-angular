@@ -1,5 +1,31 @@
 .form-group {
   margin-bottom: 15px;
+  select {
+    width: 100%;
+    padding: 4px;
+    font-size: 14px;
+
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    &:hover {
+      border-color: #888;
+    }
+
+    option {
+      padding: 4px;
+      font-size: 14px;
+    }
+  }
 }
 
 .form-control {

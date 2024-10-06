@@ -20,7 +20,7 @@ import { NgIf } from '@angular/common';
 })
 export class TaskDetailsComponent {
   @Input() currentTask: Task | null = null;
-  @Input() isOpen: boolean = false;
+  @Input() isOpenDetails: boolean = false;
 
   @Output() closeDetails = new EventEmitter<void>();
   onClose() {

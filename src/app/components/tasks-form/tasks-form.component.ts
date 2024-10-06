@@ -9,6 +9,7 @@ import {
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 import { openCloseAnimation } from './animations';
+import { of } from 'rxjs';
 
 export enum TaskStatus {
   OPEN = 'OPEN',
@@ -25,20 +26,24 @@ export enum TaskStatus {
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [openCloseAnimation],
 })
-export class TasksFormComponent implements OnInit {
+export class TasksFormComponent {
+  @Input() isOpenForm: boolean = false;
   @Input() formGroup!: FormGroup;
-  @Input() isOpen: boolean = false;
   @Output() submitForm = new EventEmitter();
+  @Output() formToggleBtn = new EventEmitter();
 
   statusOptions = Object.values(TaskStatus);
 
-  ngOnInit(): void {}
-
   addTask() {
-    this.submitForm.emit();
+    if (this.formGroup.valid) {
+      this.submitForm.emit();
+      this.formGroup.reset();
+    } else {
+      throw 'Form is invalid!';
+    }
   }
   toggle() {
-    this.isOpen = !this.isOpen;
+    this.formToggleBtn.emit();
   }
   get title() {
     return this.formGroup.get('title');
