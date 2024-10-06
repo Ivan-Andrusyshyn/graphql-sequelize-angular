@@ -20,11 +20,11 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
 import { User } from '../../shared/models/user.model';
 import { Task } from '../../shared/models/task.model';
 import { TasksService } from '../../shared/services/tasks-service.service';
-import { TasksFormComponent } from '../../components/tasks-form/tasks-form.component';
 import { OnScrollDirective } from '../../shared/directives/on-scroll.directive';
 import { TasksListComponent } from '../../components/tasks-list/tasks-list.component';
 import { TaskDetailsComponent } from '../../components/task-details/task-details.component';
 import { catchError, finalize, of, take } from 'rxjs';
+import { TasksFormComponent } from '../../components/tasks-form/tasks-form.component';
 
 @Component({
   selector: 'app-tasks-profile',
@@ -90,19 +90,20 @@ export class TasksProfileComponent implements OnInit {
     if (!user) return;
     const newTask = { ...this.taskForm.value, userId: user.id };
     if (this.isUpdate()) {
+      const tasksArray = this.tasks().slice() ?? [];
+      newTask.id = this.currentTaskId;
+      const index = tasksArray.findIndex(
+        (item) => item.id === this.currentTaskId
+      );
+      tasksArray[index] = newTask;
+      this.isOpenForm.set(true);
       this.tasksService.updateTask(newTask).subscribe(() => {
-        const tasksArray = this.tasks().slice() ?? [];
-        newTask.id = this.currentTaskId;
-        const index = tasksArray.findIndex(
-          (item) => item.id === this.currentTaskId
-        );
-        tasksArray[index] = newTask;
-        this.isOpenForm.set(true);
         this.tasks.set(tasksArray);
       });
     } else {
       this.tasksService.createTask(newTask).subscribe(() => {
         this.tasks.update((prev) => [...prev, newTask]);
+        this.taskForm.reset();
       });
     }
   }

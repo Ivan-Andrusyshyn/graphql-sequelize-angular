@@ -1,7 +1,7 @@
 <ul class="task-list" [@openClose]="isOpenDetails ? 'open' : 'closed'">
   <li *ngFor="let task of tasks; let i = index" class="task-item">
     <h3>{{ task.title }}</h3>
-    @if (!showOptions()) {
+    @if (!isCurrentTaskExpended(task.id)) {
     <span [style.color]="handleColorByStatus(task.status)">{{
       task.status
     }}</span>

@@ -37,7 +37,6 @@ export class TasksFormComponent {
   addTask() {
     if (this.formGroup.valid) {
       this.submitForm.emit();
-      this.formGroup.reset();
     } else {
       throw 'Form is invalid!';
     }
