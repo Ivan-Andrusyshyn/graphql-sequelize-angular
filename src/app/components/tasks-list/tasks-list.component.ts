@@ -30,7 +30,7 @@ export class TasksListComponent {
 
   @Output() onDeleteTask = new EventEmitter();
   @Output() onUpdateTask = new EventEmitter();
-  @Output() detailsTasks = new EventEmitter();
+  @Output() openDetailsTasks = new EventEmitter();
 
   expandedTaskId = signal<string | null>(null);
   showOptions = signal<boolean>(false);
@@ -52,7 +52,7 @@ export class TasksListComponent {
     }
   }
   onDetailsTask(task: Task) {
-    this.detailsTasks.emit(task);
+    this.openDetailsTasks.emit(task);
   }
   updateTask(task: Task) {
     if (task) this.onUpdateTask.emit(task);

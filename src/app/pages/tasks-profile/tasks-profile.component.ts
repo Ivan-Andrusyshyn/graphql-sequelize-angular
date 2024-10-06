@@ -64,6 +64,7 @@ export class TasksProfileComponent implements OnInit {
   isUpdate = signal<boolean>(false);
 
   constructor() {}
+
   ngOnInit(): void {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
@@ -75,6 +76,7 @@ export class TasksProfileComponent implements OnInit {
       this.user.set(userData);
     }
   }
+
   handleTask(): void {
     const user: User | null = this.lsService.getItem('user');
 
@@ -102,11 +104,12 @@ export class TasksProfileComponent implements OnInit {
       console.log('Form is invalid');
     }
   }
+
   closeDetails() {
     this.isOpenDetails.set(false);
   }
 
-  detailsTasks(task: Task) {
+  openDetailsTasks(task: Task) {
     this.isOpenDetails.set(true);
     this.currentTask = task;
   }
