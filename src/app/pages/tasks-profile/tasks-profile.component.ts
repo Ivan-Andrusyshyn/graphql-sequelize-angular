@@ -1,8 +1,8 @@
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -12,8 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, take } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { User } from '../../shared/models/user.model';
@@ -43,23 +42,25 @@ import { TaskDetailsComponent } from '../../components/task-details/task-details
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksProfileComponent {
-  tasks: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
-  isOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isOpenForm: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  tasks$ = this.tasks.asObservable();
-  isOpen$ = this.isOpen.asObservable();
-  isOpenForm$ = this.isOpenForm.asObservable();
-
   taskForm!: FormGroup;
-  isUpdate: boolean = false;
   currentTaskId: string = '';
   currentTask: Task | null = null;
-  user = signal<User | null>(null);
 
-  private cd = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
   private lsService = inject(LocalStorageService);
   private tasksService = inject(TasksService);
+
+  private tasks = toSignal(this.tasksService.getAllTasks(), {
+    initialValue: [],
+  });
+  private computedTasks = computed(() => signal(this.tasks()));
+
+  tasksForDisplay = computed(() => this.computedTasks()());
+
+  user = signal<User | null>(null);
+  isOpenForm = signal<boolean>(false);
+  isOpenDetails = signal<boolean>(false);
+  isUpdate = signal<boolean>(false);
 
   constructor() {
     this.taskForm = this.fb.group({
@@ -71,19 +72,6 @@ export class TasksProfileComponent {
     if (userData) {
       this.user.set(userData);
     }
-
-    this.tasksService
-      .getAllTasks()
-      .pipe(takeUntilDestroyed())
-      .subscribe(
-        (response) => {
-          this.tasks.next(response);
-          this.cd.markForCheck();
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
   }
 
   handleTask(): void {
@@ -91,55 +79,34 @@ export class TasksProfileComponent {
 
     if (this.taskForm.valid && user) {
       const newTask = { ...this.taskForm.value, userId: user.id };
-      const tasksArray = this.tasks.value.slice();
-
-      if (this.isUpdate) {
+      const tasksArray = this.tasksForDisplay().slice() ?? [];
+      if (this.isUpdate()) {
         newTask.id = this.currentTaskId;
-        this.tasksService
-          .updateTask(newTask)
-          .pipe(take(1))
-          .subscribe({
-            next: () => {
-              const index = tasksArray.findIndex(
-                (item) => item.id === this.currentTaskId
-              );
-              tasksArray[index] = newTask;
+        const index = tasksArray.findIndex(
+          (item) => item.id === this.currentTaskId
+        );
+        tasksArray[index] = newTask;
+        this.isOpenForm.set(true);
 
-              this.tasks.next(tasksArray);
-              this.isOpenForm.next(true);
-              this.cd.markForCheck();
-            },
-            error: (err) => {
-              console.error('Error creating task:', err);
-            },
-          });
+        this.tasksService.updateTask(newTask).subscribe(() => {
+          this.computedTasks().set(tasksArray);
+        });
       } else {
-        this.tasksService
-          .createTask(newTask)
-          .pipe(take(1))
-          .subscribe({
-            next: (task) => {
-              tasksArray.push(task);
-              this.tasks.next(tasksArray);
-
-              this.taskForm.reset();
-              this.cd.markForCheck();
-            },
-            error: (err) => {
-              console.error('Error creating task:', err);
-            },
-          });
+        this.tasksService.createTask(newTask).subscribe(() => {
+          this.computedTasks().update((prev) => [...prev, newTask]);
+          this.taskForm.reset();
+        });
       }
     } else {
       console.log('Form is invalid');
     }
   }
   closeDetails() {
-    this.isOpen.next(false);
+    this.isOpenDetails.set(false);
   }
 
   detailsTasks(task: Task) {
-    this.isOpen.next(true);
+    this.isOpenDetails.set(true);
     this.currentTask = task;
   }
 
@@ -149,14 +116,11 @@ export class TasksProfileComponent {
       description: task.description,
       status: task.status,
     });
-    if (this.isOpenForm.value) {
-      this.isOpenForm.next(false);
-      return;
-    }
+
     if (task.id) {
       this.currentTaskId = task.id;
-      this.isUpdate = true;
-      this.isOpenForm.next(true);
+      this.isOpenForm.update((prev) => !prev);
+      this.isUpdate.set(true);
     } else {
       console.log('Task id not exist');
     }
@@ -165,18 +129,10 @@ export class TasksProfileComponent {
   onDeleteTask(id: string | undefined) {
     const user: User | null = this.lsService.getItem('user');
     if (user && user.id && id) {
-      this.tasksService
-        .deleteTask(id, user.id)
-        .pipe(take(1))
-        .subscribe({
-          next: (response) => {
-            this.tasks.next(response);
-            this.taskForm.reset();
-          },
-          error: (err) => {
-            console.error('Error creating task:', err);
-          },
-        });
+      this.tasksService.deleteTask(id, user.id);
+      this.computedTasks().update((prev) =>
+        prev.filter((item) => item.id !== id)
+      );
     }
   }
 }

@@ -12,18 +12,18 @@
   </p>
 </div>
 <div class="task-container">
-  <div *ngIf="!currentTask">
+  <div *ngIf="!isOpenDetails()">
     <app-tasks-form
-      [isOpen]="(isOpenForm$ | async) ?? false"
+      [isOpen]="isOpenForm()"
       [formGroup]="taskForm"
       (submitForm)="handleTask()"
     ></app-tasks-form>
   </div>
   <div class="tasks-wrapper">
     <app-tasks-list
-      [tasks]="(tasks$ | async) ?? []"
-      [isOpen]="(isOpen$ | async) ?? false"
-      [isOpenForm]="(isOpenForm$ | async) ?? false"
+      [tasks]="tasksForDisplay()"
+      [isOpen]="isOpenDetails()"
+      [isOpenForm]="isOpenForm()"
       (onDeleteTask)="onDeleteTask($event)"
       (onUpdateTask)="updateTask($event)"
       (detailsTasks)="detailsTasks($event)"
@@ -31,7 +31,7 @@
     <app-task-details
       (closeDetails)="closeDetails()"
       [currentTask]="currentTask"
-      [isOpen]="(isOpen$ | async) ?? false"
+      [isOpen]="isOpenDetails()"
     ></app-task-details>
   </div>
 </div>

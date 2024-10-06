@@ -1,7 +1,7 @@
 .task-list {
   list-style-type: none;
   padding: 1rem;
-  max-height: 350px;
+  max-height: 360px;
   background-color: white;
   min-height: 200px;
   min-width: 350px;
@@ -38,7 +38,7 @@
     display: flex;
     position: relative;
     overflow: hidden;
-    width: 45px;
+    width: 60px;
     padding: 0.5rem;
     gap: 0.5rem;
     transition: width 0.3s linear;

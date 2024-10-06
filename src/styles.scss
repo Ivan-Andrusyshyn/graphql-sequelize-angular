@@ -5,6 +5,7 @@ h2 {
   color: #9999;
 }
 * {
+  box-sizing: border-box;
   scrollbar-width: thin;
   scroll-behavior: smooth;
   &::-webkit-scrollbar {
