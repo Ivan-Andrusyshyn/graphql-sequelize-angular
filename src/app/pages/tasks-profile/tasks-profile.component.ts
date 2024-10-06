@@ -52,8 +52,7 @@ export class TasksProfileComponent implements OnInit {
   currentTask: Task | null = null;
   private currentTaskId: string = '';
 
-  private tasks: WritableSignal<Task[]> = signal<Task[]>([]);
-  computedTasks: Signal<Task[]> = computed(() => this.tasks());
+  tasks: WritableSignal<Task[]> = signal<Task[]>([]);
 
   user = signal<User | null>(null);
   isOpenForm = signal<boolean>(false);
@@ -85,7 +84,7 @@ export class TasksProfileComponent implements OnInit {
 
     if (this.taskForm.valid && user) {
       const newTask = { ...this.taskForm.value, userId: user.id };
-      const tasksArray = this.computedTasks().slice() ?? [];
+      const tasksArray = this.tasks().slice() ?? [];
       if (this.isUpdate()) {
         newTask.id = this.currentTaskId;
         const index = tasksArray.findIndex(

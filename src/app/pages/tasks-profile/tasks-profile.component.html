@@ -22,7 +22,7 @@
     </div>
     <div class="tasks-wrapper">
       <app-tasks-list
-        [tasks]="computedTasks()"
+        [tasks]="tasks()"
         [isOpen]="isOpenDetails()"
         [isOpenForm]="isOpenForm()"
         (onDeleteTask)="onDeleteTask($event)"
