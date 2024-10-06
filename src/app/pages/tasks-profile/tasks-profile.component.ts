@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
 import {
@@ -41,7 +42,7 @@ import { TaskDetailsComponent } from '../../components/task-details/task-details
   styleUrl: './tasks-profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksProfileComponent {
+export class TasksProfileComponent implements OnInit {
   taskForm!: FormGroup;
   currentTaskId: string = '';
   currentTask: Task | null = null;
@@ -62,7 +63,8 @@ export class TasksProfileComponent {
   isOpenDetails = signal<boolean>(false);
   isUpdate = signal<boolean>(false);
 
-  constructor() {
+  constructor() {}
+  ngOnInit(): void {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
@@ -73,7 +75,6 @@ export class TasksProfileComponent {
       this.user.set(userData);
     }
   }
-
   handleTask(): void {
     const user: User | null = this.lsService.getItem('user');
 
