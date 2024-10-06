@@ -2,11 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  input,
-  OnChanges,
   Output,
   signal,
-  SimpleChanges,
 } from '@angular/core';
 import { OnScrollDirective } from '../../shared/directives/on-scroll.directive';
 import { NgFor } from '@angular/common';
@@ -25,8 +22,8 @@ import { translateAnimation } from './animations';
 })
 export class TasksListComponent {
   @Input() tasks: Task[] = [];
-  @Input() isOpen: boolean = false;
   @Input() isOpenForm: boolean = false;
+  @Input() isOpen: boolean = false;
 
   @Output() onDeleteTask = new EventEmitter();
   @Output() onUpdateTask = new EventEmitter();
@@ -40,6 +37,7 @@ export class TasksListComponent {
       ? this.expandedTaskId() === taskId && this.showOptions()
       : false;
   }
+
   showMoreDetails(task: Task) {
     if (task.id) {
       if (this.expandedTaskId() === task.id) {
@@ -51,11 +49,23 @@ export class TasksListComponent {
       }
     }
   }
+
   onDetailsTask(task: Task) {
     this.openDetailsTasks.emit(task);
   }
+
   updateTask(task: Task) {
     if (task) this.onUpdateTask.emit(task);
+  }
+
+  handleColorByStatus(status: string): string {
+    const statusColors: { [key: string]: string } = {
+      OPEN: '#FF6B6B',
+      IN_PROGRESS: '#FFD93D',
+      DONE: '#4CAF50',
+    };
+
+    return statusColors[status] || 'gray';
   }
 
   deleteTask(id: string | undefined) {

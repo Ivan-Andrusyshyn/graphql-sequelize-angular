@@ -2,36 +2,41 @@
   <h3>{{ user()?.username }}</h3>
 </div>
 
-<div class="title-container">
-  <div class="task-bg-1"></div>
-  <h2>Task List</h2>
-  <p>
-    This section contains all your tasks. Please add a new task to get started.
-    Effective planning can enhance your productivity and lead to greater
-    happiness.
-  </p>
-</div>
-<div class="task-container">
-  <div *ngIf="!isOpenDetails()">
-    <app-tasks-form
-      [isOpen]="isOpenForm()"
-      [formGroup]="taskForm"
-      (submitForm)="handleTask()"
-    ></app-tasks-form>
+<ng-container *ngIf="!isLoading(); else loader">
+  <div class="title-container">
+    <div class="task-bg-1"></div>
+    <h2>Task List</h2>
+    <p>
+      This section contains all your tasks. Please add a new task to get
+      started. Effective planning can enhance your productivity and lead to
+      greater happiness.
+    </p>
   </div>
-  <div class="tasks-wrapper">
-    <app-tasks-list
-      [tasks]="tasksForDisplay()"
-      [isOpen]="isOpenDetails()"
-      [isOpenForm]="isOpenForm()"
-      (onDeleteTask)="onDeleteTask($event)"
-      (onUpdateTask)="updateTask($event)"
-      (openDetailsTasks)="openDetailsTasks($event)"
-    ></app-tasks-list>
-    <app-task-details
-      (closeDetails)="closeDetails()"
-      [currentTask]="currentTask"
-      [isOpen]="isOpenDetails()"
-    ></app-task-details>
+  <div class="task-container">
+    <div *ngIf="!isOpenDetails()">
+      <app-tasks-form
+        [isOpen]="isOpenForm()"
+        [formGroup]="taskForm"
+        (submitForm)="handleTask()"
+      ></app-tasks-form>
+    </div>
+    <div class="tasks-wrapper">
+      <app-tasks-list
+        [tasks]="computedTasks()"
+        [isOpen]="isOpenDetails()"
+        [isOpenForm]="isOpenForm()"
+        (onDeleteTask)="onDeleteTask($event)"
+        (onUpdateTask)="updateTask($event)"
+        (openDetailsTasks)="openDetailsTasks($event)"
+      ></app-tasks-list>
+      <app-task-details
+        (closeDetails)="closeDetails()"
+        [currentTask]="currentTask"
+        [isOpen]="isOpenDetails()"
+      ></app-task-details>
+    </div>
   </div>
-</div>
+</ng-container>
+<ng-template #loader>
+  <h2>Loading...</h2>
+</ng-template>

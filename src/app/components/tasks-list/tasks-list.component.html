@@ -1,6 +1,15 @@
 <ul class="task-list" [@openClose]="isOpen ? 'open' : 'closed'">
   <li *ngFor="let task of tasks; let i = index" class="task-item">
     <h3>{{ task.title }}</h3>
+    @if (!showOptions()) {
+    <span [style.color]="handleColorByStatus(task.status)">{{
+      task.status
+    }}</span>
+    }
+    <div
+      [style.background]="handleColorByStatus(task.status)"
+      class="statusIndicator"
+    ></div>
     <div
       class="btn-wrapper"
       [appOnScroll]="showOptions()"

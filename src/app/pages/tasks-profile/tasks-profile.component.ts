@@ -5,7 +5,9 @@ import {
   computed,
   inject,
   OnInit,
+  Signal,
   signal,
+  WritableSignal,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -13,7 +15,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { User } from '../../shared/models/user.model';
@@ -43,29 +44,27 @@ import { TaskDetailsComponent } from '../../components/task-details/task-details
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksProfileComponent implements OnInit {
-  taskForm!: FormGroup;
-  currentTaskId: string = '';
-  currentTask: Task | null = null;
-
   private fb = inject(FormBuilder);
   private lsService = inject(LocalStorageService);
   private tasksService = inject(TasksService);
 
-  private tasks = toSignal(this.tasksService.getAllTasks(), {
-    initialValue: [],
-  });
-  private computedTasks = computed(() => signal(this.tasks()));
+  taskForm!: FormGroup;
+  currentTask: Task | null = null;
+  private currentTaskId: string = '';
 
-  tasksForDisplay = computed(() => this.computedTasks()());
+  private tasks: WritableSignal<Task[]> = signal<Task[]>([]);
+  computedTasks: Signal<Task[]> = computed(() => this.tasks());
 
   user = signal<User | null>(null);
   isOpenForm = signal<boolean>(false);
   isOpenDetails = signal<boolean>(false);
   isUpdate = signal<boolean>(false);
+  isLoading = signal<boolean>(false);
 
   constructor() {}
 
   ngOnInit(): void {
+    this.isLoading.set(true);
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
@@ -75,6 +74,10 @@ export class TasksProfileComponent implements OnInit {
     if (userData) {
       this.user.set(userData);
     }
+    this.tasksService.getAllTasks().subscribe((tasks) => {
+      this.tasks.set(tasks);
+      this.isLoading.set(false);
+    });
   }
 
   handleTask(): void {
@@ -82,7 +85,7 @@ export class TasksProfileComponent implements OnInit {
 
     if (this.taskForm.valid && user) {
       const newTask = { ...this.taskForm.value, userId: user.id };
-      const tasksArray = this.tasksForDisplay().slice() ?? [];
+      const tasksArray = this.computedTasks().slice() ?? [];
       if (this.isUpdate()) {
         newTask.id = this.currentTaskId;
         const index = tasksArray.findIndex(
@@ -92,11 +95,11 @@ export class TasksProfileComponent implements OnInit {
         this.isOpenForm.set(true);
 
         this.tasksService.updateTask(newTask).subscribe(() => {
-          this.computedTasks().set(tasksArray);
+          this.tasks.set(tasksArray);
         });
       } else {
         this.tasksService.createTask(newTask).subscribe(() => {
-          this.computedTasks().update((prev) => [...prev, newTask]);
+          this.tasks.update((prev) => [...prev, newTask]);
           this.taskForm.reset();
         });
       }
@@ -134,9 +137,7 @@ export class TasksProfileComponent implements OnInit {
     const user: User | null = this.lsService.getItem('user');
     if (user && user.id && id) {
       this.tasksService.deleteTask(id, user.id);
-      this.computedTasks().update((prev) =>
-        prev.filter((item) => item.id !== id)
-      );
+      this.tasks.update((prev) => prev.filter((item) => item.id !== id));
     }
   }
 }

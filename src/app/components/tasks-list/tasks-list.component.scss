@@ -17,14 +17,33 @@
   padding: 15px;
   height: 60px;
   max-width: 100%;
-  box-sizing: border-box;
   margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
+  gap: 0.5rem;
+
+  position: relative;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  gap: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .statusIndicator {
+    height: 60px;
+    width: 10px;
+    border-radius: 1rem;
+    left: 0;
+
+    position: absolute;
+    background-color: currentColor;
+  }
+  span {
+    position: absolute;
+    font-size: 12px;
+    text-transform: lowercase;
+    color: red;
+    bottom: 0.5rem;
+    left: 55px;
+  }
   p,
   h3 {
     margin: 0;
