@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { User } from '../../shared/models/user.model';
+import { AuthArgs, User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-auth-form',
@@ -22,7 +22,7 @@ import { User } from '../../shared/models/user.model';
 })
 export class AuthFormComponent implements OnInit {
   @Input() isLogin: boolean = true;
-  @Output() submitForm = new EventEmitter<User>();
+  @Output() submitForm = new EventEmitter<AuthArgs>();
 
   private fb = inject(FormBuilder);
 
@@ -31,8 +31,8 @@ export class AuthFormComponent implements OnInit {
   ngOnInit(): void {
     this.authForm = this.fb.group({
       username: ['Tests32a32b', Validators.required],
-      password: ['Tests123432qb', Validators.required],
-      email: ['tests@tester1'],
+      email: ['dominos12@icloud.com'],
+      password: ['Dominos1212356', Validators.required],
     });
 
     if (this.isLogin) {

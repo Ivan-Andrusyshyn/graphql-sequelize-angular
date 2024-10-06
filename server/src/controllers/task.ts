@@ -1,4 +1,4 @@
-import { TaskTypes } from '../models/graphql/types/task.interface';
+import { TaskTypes } from '../models/graphql/interfaces/task.interface';
 import { Task } from '../models/task-sequelize';
 
 export const getAllTasks = async (
@@ -9,13 +9,14 @@ export const getAllTasks = async (
   try {
     const tasks = await Task.findAll({
       where: { userId: args.userId },
-      attributes: ['id', 'title', 'description'],
+      attributes: ['id', 'title', 'description', 'status'],
     });
 
     return tasks.map((task: TaskTypes) => ({
       id: task.id,
       title: task.title,
       description: task.description,
+      status: task.status,
     }));
   } catch (error: any) {
     console.error('Error fetching tasks:', error.message || error);
@@ -28,7 +29,7 @@ export const createTask = async ({
 }: {
   input: TaskTypes;
 }): Promise<TaskTypes> => {
-  const { title, description, userId } = input;
+  const { title, description, userId, status } = input;
 
   try {
     const existingTask = await Task.findOne({
@@ -39,11 +40,17 @@ export const createTask = async ({
       throw new Error('Task with this title already exists for this user.');
     }
 
-    const createdTask = await Task.create({ title, description, userId });
+    const createdTask = await Task.create({
+      title,
+      description,
+      userId,
+      status,
+    });
 
     return {
       id: createdTask.id,
       title: createdTask.title,
+      status: createdTask.status,
       description: createdTask.description,
     };
   } catch (error: any) {
@@ -57,7 +64,8 @@ export const updateTask = async ({
 }: {
   input: TaskTypes;
 }): Promise<TaskTypes> => {
-  const { id, title, description, userId } = input;
+  const { id, title, description, userId, status } = input;
+  console.log(status);
 
   try {
     const existingTask = await Task.findOne({
@@ -73,14 +81,14 @@ export const updateTask = async ({
     await existingTask.update({
       title,
       description,
+      status,
     });
-
-    console.log(`Task updated by user ${userId}:`, existingTask);
 
     return {
       id: existingTask.id,
       title: existingTask.title,
       description: existingTask.description,
+      status: existingTask.status,
     };
   } catch (error: any) {
     console.error('Error updating task:', error.message || error);
@@ -106,11 +114,12 @@ export const deleteTask = async ({
     await existingTask.destroy();
     const tasks = await Task.findAll({
       where: { userId },
-      attributes: ['id', 'title', 'description'],
+      attributes: ['id', 'title', 'description', 'status'],
     });
     return tasks.map((task: TaskTypes) => ({
       id: task.id,
       title: task.title,
+      status: task.status,
       description: task.description,
     }));
   } catch (error: any) {

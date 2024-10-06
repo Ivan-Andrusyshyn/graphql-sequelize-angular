@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { AuthArgs } from '../models/graphql/types/user.interface';
+import { AuthArgs, User } from '../models/graphql/interfaces/user.interface';
 import { Users } from '../models/user-sequelize';
 
 const jwtKey = process.env.JWT_KEY;
@@ -11,10 +11,10 @@ if (!jwtKey) {
 }
 
 export const registration = async (
-  { input }: { input: AuthArgs },
+  { input }: { input: User },
   req: Request
 ) => {
-  const { username, email, password } = input;
+  const { username, email, password, role } = input;
 
   if (!username || !email || !password) {
     throw new Error('All fields are required');
@@ -27,11 +27,7 @@ export const registration = async (
 
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  const newUser = {
-    username,
-    email,
-    password: hashedPassword,
-  };
+  const newUser = { username, email, role, password: hashedPassword };
   const createdUser = await Users.create(newUser);
 
   const token = jwt.sign({ userId: createdUser.id }, jwtKey, {
@@ -42,6 +38,7 @@ export const registration = async (
     id: createdUser.id,
     username: createdUser.username,
     email: createdUser.email,
+    role: createdUser.role,
     token: token,
   };
 };
@@ -63,6 +60,7 @@ export const login = async ({ input }: { input: AuthArgs }, req: Request) => {
     id: user.id,
     username: user.username,
     email: user.email,
+    role: user.role,
     token: token,
   };
 };

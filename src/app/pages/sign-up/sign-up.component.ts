@@ -4,6 +4,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { take } from 'rxjs';
+import { AuthArgs } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-sign-up',
@@ -20,7 +21,7 @@ export class SignUpComponent {
 
   private router = inject(Router);
 
-  handleRegistration(data: any): void {
+  handleRegistration(data: AuthArgs): void {
     this.authService
       .registration(data)
       .pipe(take(1))

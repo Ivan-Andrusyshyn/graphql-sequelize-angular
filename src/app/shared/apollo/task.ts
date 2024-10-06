@@ -33,6 +33,7 @@ export const GET_ALL_TASKS = gql`
     getAllTasks {
       id
       title
+      status
       description
     }
   }

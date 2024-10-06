@@ -6,16 +6,18 @@ export const REGISTER_USER = gql`
       id
       username
       email
+      role
       token
     }
   }
 `;
 export const LOGIN_USER = gql`
-  mutation ($input: UserInput) {
+  mutation ($input: LoginInput) {
     login(input: $input) {
       id
       username
       email
+      role
       token
     }
   }
@@ -26,6 +28,7 @@ export const GET_ALL_USERS = gql`
       id
       username
       email
+      role
       password
     }
   }

@@ -1,6 +1,10 @@
 import { DataTypes, Error } from 'sequelize';
 import { sequelize } from '../config/sequelize';
 
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 export const Users = sequelize.define('users', {
   username: {
     type: DataTypes.STRING,
@@ -12,6 +16,10 @@ export const Users = sequelize.define('users', {
   },
   password: {
     type: DataTypes.STRING,
+  },
+  role: {
+    type: DataTypes.ENUM(UserRole.ADMIN, UserRole.USER),
+    allowNull: false,
   },
 });
 sequelize

@@ -1,6 +1,9 @@
+import { UserRole } from '../../user-sequelize';
+
 export interface User {
   username: string;
   email: string;
+  role: UserRole;
   password: string;
   id?: number;
 }

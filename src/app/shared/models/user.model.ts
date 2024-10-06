@@ -1,5 +1,5 @@
 export interface AuthArgs {
-  username: string;
+  username?: string;
   email: string;
   password: string;
 }

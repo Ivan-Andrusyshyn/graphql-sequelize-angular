@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
+  signal,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -53,6 +54,7 @@ export class TasksProfileComponent {
   isUpdate: boolean = false;
   currentTaskId: string = '';
   currentTask: Task | null = null;
+  user = signal<User | null>(null);
 
   private cd = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
@@ -63,7 +65,12 @@ export class TasksProfileComponent {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
+      status: ['OPEN', Validators.required],
     });
+    const userData: User | null = this.lsService.getItem('user');
+    if (userData) {
+      this.user.set(userData);
+    }
 
     this.tasksService
       .getAllTasks()
@@ -79,8 +86,9 @@ export class TasksProfileComponent {
       );
   }
 
-  addTask(): void {
+  handleTask(): void {
     const user: User | null = this.lsService.getItem('user');
+
     if (this.taskForm.valid && user) {
       const newTask = { ...this.taskForm.value, userId: user.id };
       const tasksArray = this.tasks.value.slice();
@@ -99,7 +107,6 @@ export class TasksProfileComponent {
 
               this.tasks.next(tasksArray);
               this.isOpenForm.next(true);
-              this.taskForm.reset();
               this.cd.markForCheck();
             },
             error: (err) => {
@@ -140,6 +147,7 @@ export class TasksProfileComponent {
     this.taskForm.setValue({
       title: task.title,
       description: task.description,
+      status: task.status,
     });
     if (this.isOpenForm.value) {
       this.isOpenForm.next(false);

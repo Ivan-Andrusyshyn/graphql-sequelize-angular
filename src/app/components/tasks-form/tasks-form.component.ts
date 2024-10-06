@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,10 +10,16 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 import { openCloseAnimation } from './animations';
 
+export enum TaskStatus {
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+}
+
 @Component({
   selector: 'app-tasks-form',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule],
+  imports: [NgIf, NgFor, ReactiveFormsModule],
   templateUrl: './tasks-form.component.html',
   styleUrl: './tasks-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +29,8 @@ export class TasksFormComponent implements OnInit {
   @Input() formGroup!: FormGroup;
   @Input() isOpen: boolean = false;
   @Output() submitForm = new EventEmitter();
+
+  statusOptions = Object.values(TaskStatus);
 
   ngOnInit(): void {}
 
@@ -36,6 +44,9 @@ export class TasksFormComponent implements OnInit {
     return this.formGroup.get('title');
   }
 
+  get status() {
+    return this.formGroup.get('status');
+  }
   get description() {
     return this.formGroup.get('description');
   }
